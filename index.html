@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Home Tour Preview (Example)</title>
+<style>
+:root{--pink:#ff2e93;--pink2:#e91e8c;--ink:#111111;--bg:#f7f7f9;--card:#ffffff;--muted:#555555;--line:#e3e3e8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.4;padding-bottom:92px}
+.app{max-width:520px;margin:0 auto;min-height:100vh}
+.example-banner{background:#ffe3f1;color:#111;font-size:12px;font-weight:700;text-align:center;padding:8px 12px;border-bottom:2px solid var(--pink)}
+.agent-bar{background:var(--ink);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;border-bottom:4px solid var(--pink)}
+.agent-left{display:flex;align-items:center;gap:11px;min-width:0}
+.avatar-img,.avatar-fallback{width:40px;height:40px;border-radius:50%;flex-shrink:0}
+.avatar-img{object-fit:cover}
+.avatar-fallback{background:var(--pink);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.agent-name{font-weight:800;font-size:15px;line-height:1.2}
+.agent-brokerage{font-size:12px;color:#ddd;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent-icons{display:flex;gap:6px}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--pink);background:transparent;color:#fff;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}
+.icon-btn svg{width:17px;height:17px}
+.tour-hero{background:var(--card);padding:16px;border-bottom:1px solid var(--line)}
+.tour-title{font-size:21px;font-weight:800;margin:0 0 4px}
+.tour-sub{font-size:14px;color:var(--muted);margin:0 0 12px}
+.meta-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.meta-pill{font-size:12px;font-weight:700;color:var(--pink2);background:#ffe3f1;padding:4px 10px;border-radius:999px}
+.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-primary,.btn-secondary,.btn-dark{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px;border-radius:12px;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;border:2px solid transparent;font-family:inherit}
+.btn-primary{background:var(--pink);color:#fff}.btn-secondary{background:#fff;color:var(--ink);border-color:var(--ink)}.btn-dark{background:var(--ink);color:#fff}
+.tabs{display:flex;background:#fff;position:sticky;top:64px;z-index:15;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;padding:13px;border:0;background:#fff;font-size:15px;font-weight:800;color:var(--ink);border-bottom:4px solid transparent;font-family:inherit}
+.tabs button.on{border-bottom-color:var(--pink);color:var(--pink2)}
+.hide{display:none}
+.timeline{position:relative;padding:18px 14px 10px 44px}
+.timeline::before{content:"";position:absolute;left:24px;top:26px;bottom:24px;width:3px;background:var(--pink);opacity:.35}
+.timeline-item{position:relative;margin-bottom:14px}
+.timeline-node{position:absolute;left:-32px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--pink);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--bg)}
+.timeline-item.done .timeline-node{background:var(--ink)}
+.stop-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.stop-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.stop-title{font-size:16px;font-weight:800}
+.stop-datetime{font-size:13px;color:var(--pink2);margin-top:3px;font-weight:700}
+.stop-subtitle{font-size:13px;color:var(--muted);margin-top:2px}
+.score-badge{background:var(--ink);color:#fff;border-radius:12px;padding:4px 10px;font-weight:800;font-size:15px;min-width:54px;text-align:center}.score-badge small{display:block;font-size:10px;color:var(--pink);letter-spacing:.06em}
+.photo-wrap{margin-top:10px;border-radius:12px;overflow:hidden;aspect-ratio:16/10;background:var(--bg)}
+.photo-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.address-row{display:flex;gap:7px;margin-top:11px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:700;line-height:1.35}
+.loc-icon{width:16px;height:16px;color:var(--pink);flex-shrink:0;margin-top:2px}
+.details-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--bg);font-size:13px;color:var(--muted);flex-wrap:wrap}
+.detail-price{font-weight:800;color:var(--ink)}
+.listing-link{display:inline-flex;align-items:center;gap:4px;color:var(--pink2);font-weight:800;text-decoration:none}.listing-link svg{width:13px;height:13px}
+.agent-note{margin-top:10px;padding:9px 11px;background:var(--bg);border-left:4px solid var(--pink);border-radius:6px;font-size:13px}
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.q-btn{text-align:center;padding:9px 6px;font-size:12px;font-weight:800;color:var(--ink);background:var(--bg);border-radius:8px;text-decoration:none}
+.feedback-box{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.rating-row{display:flex;gap:6px;margin-bottom:8px}
+.rate-pill{flex:1;padding:10px 8px;font-size:14px;font-weight:800;border-radius:999px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;font-family:inherit}
+.rate-pill.active[data-val="Love it"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.rate-pill.active[data-val="Maybe"]{background:var(--ink);color:#fff}
+.rate-pill.active[data-val="Pass"]{background:#d8d8de;border-color:#d8d8de;color:var(--ink)}
+.sc-toggle{width:100%;margin-top:4px;padding:11px;border-radius:12px;border:2px dashed var(--pink);background:#fff;color:var(--pink2);font-weight:800;font-size:14px;font-family:inherit}
+.sc-body{display:none;margin-top:10px}.sc-body.open{display:block}
+.stars{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bg)}
+.stars .n{font-weight:700;font-size:14px}
+.stars div button{border:0;background:none;font-size:29px;color:#cfcfd6;padding:0 2px;line-height:1}.stars div button.on{color:var(--pink)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.chip{padding:9px 12px;border-radius:999px;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:13px;color:var(--ink);font-family:inherit}.chip.on{background:var(--pink);border-color:var(--pink);color:#fff}
+label.l{display:block;font-size:12px;font-weight:800;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+textarea,input[type=text]{width:100%;border:2px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:16px;color:var(--ink);background:#fff}
+textarea:focus,input:focus{outline:none;border-color:var(--pink)}
+.drive-connector{margin:-4px 0 12px;display:flex}
+.drive-pill{font-size:12px;font-weight:700;color:var(--ink);background:#fff;border:2px solid var(--pink);padding:3px 10px;border-radius:999px}
+.cmp{padding:14px}
+.rank-card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.06);display:flex;gap:12px}
+.badge{background:var(--pink);color:#fff;font-weight:800;border-radius:50%;min-width:38px;height:38px;display:flex;align-items:center;justify-content:center}
+.rank-card h3{margin:0;font-size:15px}.rank-card small{color:var(--muted)}
+.bar{height:8px;background:#eee;border-radius:5px;margin:6px 0}.bar i{display:block;height:100%;background:var(--pink);border-radius:5px}
+.cmp-table{background:#fff;border-radius:16px;padding:12px;overflow-x:auto;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--bg)}th:first-child,td:first-child{text-align:left}th{background:var(--ink);color:#fff;font-size:12px}
+.empty{text-align:center;color:var(--muted);padding:26px;background:#fff;border-radius:16px}
+.bottom-bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:3px solid var(--pink);padding:10px 14px;z-index:30}
+.bottom-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px}
+.bottom-inner .btn-primary,.bottom-inner .btn-secondary{padding:12px 6px;font-size:13px}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}.toast.show{opacity:1}
+.ov{position:fixed;inset:0;background:rgba(17,17,17,.75);z-index:50;display:none;align-items:flex-end;justify-content:center}.ov.on{display:flex}
+.modal{background:#fff;width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:20px}
+@media(min-width:600px){.ov{align-items:center}.modal{border-radius:20px}}
+.modal h2{margin:0 0 6px}.modal .x{float:right;border:0;background:var(--bg);border-radius:50%;width:36px;height:36px;font-size:20px;color:var(--ink)}
+.note{font-size:13px;color:#444}
+.ck{display:flex;gap:10px;align-items:center;margin:14px 0;font-weight:700;font-size:15px}.ck input{width:22px;height:22px;accent-color:var(--pink)}
+.pre{background:var(--bg);border-radius:12px;padding:12px;font-size:13px;white-space:pre-wrap;max-height:220px;overflow:auto;margin:12px 0}
+.okb{background:var(--pink);color:#fff;border-radius:12px;padding:12px;font-weight:800;text-align:center}
+.errb{background:var(--ink);color:#fff;border-left:6px solid var(--pink);border-radius:12px;padding:12px;margin:10px 0;font-size:14px}
+.err{color:var(--pink2);font-size:12px;font-weight:700;min-height:14px}
+.spin{display:inline-block;width:16px;height:16px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px;margin-right:8px}@keyframes sp{to{transform:rotate(360deg)}}
+.stack{display:grid;gap:10px}
+@media print{body{background:#fff;padding-bottom:0}.agent-bar,.tabs{position:static}.bottom-bar,.hero-actions,.quick-actions,.icon-btn,.sc-toggle,.ov,.toast{display:none!important}.sc-body{display:block!important}.stop-card{break-inside:avoid;box-shadow:none}.tab-itin,.tab-cmp{display:block!important}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="example-banner">Example Preview &middot; Placeholder homes shown for layout preview</div>
+  <header class="agent-bar">
+    <div class="agent-left"><div class="avatar-fallback">BK</div>
+      <div style="min-width:0"><div class="agent-name">Bethany Kuhns</div><div class="agent-brokerage">Anna Powell Real Estate · eXp Realty</div></div>
+    </div>
+    <div class="agent-icons">
+      <button type="button" class="icon-btn" id="shareBtn" title="Share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+    </div>
+  </header>
+  <section class="tour-hero">
+    <h1 class="tour-title">Home Tour Preview (Example)</h1>
+    <p class="tour-sub">Sat, Nov 21, 2026 • 1:00 PM - 2:30 PM</p>
+    <div class="meta-pills"><span class="meta-pill">3 homes</span><span class="meta-pill">20 min/home</span><span class="meta-pill">25 min drive</span></div>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://www.google.com/maps/dir/123%20Example%20Oak%20Ln%2C%20Raleigh%2C%20NC%2027610/456%20Example%20Pine%20Dr%2C%20Knightdale%2C%20NC%2027545/789%20Example%20Maple%20Ct%2C%20Zebulon%2C%20NC%2027597" target="_blank" rel="noopener">Full Route Map</a>
+      <button type="button" class="btn-secondary" id="icsBtn">Add to Calendar</button>
+    </div>
+  </section>
+  <nav class="tabs"><button type="button" id="tabItin" class="on">Itinerary</button><button type="button" id="tabCmp">Compare &amp; Rank</button></nav>
+  <main class="timeline tab-itin" id="tItin">
+    
+        <div class="timeline-item" data-stop="1">
+          <div class="timeline-node">1</div>
+          <div class="stop-card">
+            <div class="stop-top"><div>
+              <div class="stop-title">Stop 1 &middot; Property Showing</div>
+              <div class="stop-datetime">Sat, Nov 21, 2026 &bull; 1:00 PM - 1:20 PM</div>
+              <div class="stop-subtitle">2-car garage, fenced backyard</div>
+            </div><div class="score-badge">-<small>SCORE</small></div></div>
+            
+            <a class="address-row" href="https://www.google.com/maps/dir/?api=1&amp;destination=123%20Example%20Oak%20Ln%2C%20Raleigh%2C%20NC%2027610" target="_blank" rel="noopener">
+              <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span>123 Example Oak Ln, Raleigh, NC 27610</span>
+            </a>
+            <div class="details-footer"><span>3 bd &middot; 2 ba &middot; 1,250 sq ft</span><span class="detail-price">$245,000</span><a class="listing-link" href="https://www.realtor.com" target="_blank" rel="noopener">View Listing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+            <div class="agent-note"><strong>Watch for:</strong> Example stop. Check roof age and backyard grading.</div>
+            <div class="quick-actions">
+              <a class="q-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=123%20Example%20Oak%20Ln%2C%20Raleigh%2C%20NC%2027610" target="_blank" rel="noopener">Google Maps</a>
+              <a class="q-btn" href="https://maps.apple.com/?daddr=123%20Example%20Oak%20Ln%2C%20Raleigh%2C%20NC%2027610" target="_blank" rel="noopener">Apple Maps</a>
+              <a class="q-btn" href="https://www.google.com/maps/search/?api=1&amp;query=123%20Example%20Oak%20Ln%2C%20Raleigh%2C%20NC%2027610" target="_blank" rel="noopener">Street View</a>
+            </div>
+            <div class="feedback-box">
+              <div class="rating-row">
+                <button type="button" class="rate-pill" data-val="Love it">Love it</button>
+                <button type="button" class="rate-pill" data-val="Maybe">Maybe</button>
+                <button type="button" class="rate-pill" data-val="Pass">Pass</button>
+              </div>
+              <button type="button" class="sc-toggle">Open full scorecard (stars, must-haves, notes)</button>
+              <div class="sc-body">
+                <div class="stars"><span class="n">Layout &amp; Flow</span><div><button type="button" data-c="0" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="0" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="0" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="0" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="0" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Kitchen</span><div><button type="button" data-c="1" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="1" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="1" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="1" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="1" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Primary Suite</span><div><button type="button" data-c="2" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="2" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="2" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="2" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="2" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Yard</span><div><button type="button" data-c="3" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="3" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="3" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="3" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="3" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Condition</span><div><button type="button" data-c="4" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="4" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="4" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="4" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="4" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Location</span><div><button type="button" data-c="5" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="5" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="5" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="5" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="5" data-s="5" aria-label="5 stars">&#9733;</button></div></div>
+                <div class="chips"><button type="button" class="chip" data-m="0">Fenced Yard</button><button type="button" class="chip" data-m="1">Home Office</button><button type="button" class="chip" data-m="2">Garage</button><button type="button" class="chip" data-m="3">Updated Kitchen</button><button type="button" class="chip" data-m="4">Move-In Ready</button></div>
+                <label class="l">Pros</label><textarea data-k="pros" rows="2"></textarea>
+                <label class="l">Cons</label><textarea data-k="cons" rows="2"></textarea>
+                <label class="l">Notes / Standout memory</label><textarea data-k="notes" rows="2" placeholder="Likes, dislikes, or questions..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div><div class="drive-connector"><span class="drive-pill">12 min drive · 6.2 mi to Stop 2</span></div>
+        <div class="timeline-item" data-stop="2">
+          <div class="timeline-node">2</div>
+          <div class="stop-card">
+            <div class="stop-top"><div>
+              <div class="stop-title">Stop 2 &middot; Property Showing</div>
+              <div class="stop-datetime">Sat, Nov 21, 2026 &bull; 1:35 PM - 1:55 PM</div>
+              <div class="stop-subtitle">No HOA, updated kitchen</div>
+            </div><div class="score-badge">-<small>SCORE</small></div></div>
+            
+            <a class="address-row" href="https://www.google.com/maps/dir/?api=1&amp;destination=456%20Example%20Pine%20Dr%2C%20Knightdale%2C%20NC%2027545" target="_blank" rel="noopener">
+              <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span>456 Example Pine Dr, Knightdale, NC 27545</span>
+            </a>
+            <div class="details-footer"><span>3 bd &middot; 2 ba &middot; 1,340 sq ft</span><span class="detail-price">$240,000</span><a class="listing-link" href="https://www.realtor.com" target="_blank" rel="noopener">View Listing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+            <div class="agent-note"><strong>Watch for:</strong> Example stop. Notice street parking and afternoon sun.</div>
+            <div class="quick-actions">
+              <a class="q-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=456%20Example%20Pine%20Dr%2C%20Knightdale%2C%20NC%2027545" target="_blank" rel="noopener">Google Maps</a>
+              <a class="q-btn" href="https://maps.apple.com/?daddr=456%20Example%20Pine%20Dr%2C%20Knightdale%2C%20NC%2027545" target="_blank" rel="noopener">Apple Maps</a>
+              <a class="q-btn" href="https://www.google.com/maps/search/?api=1&amp;query=456%20Example%20Pine%20Dr%2C%20Knightdale%2C%20NC%2027545" target="_blank" rel="noopener">Street View</a>
+            </div>
+            <div class="feedback-box">
+              <div class="rating-row">
+                <button type="button" class="rate-pill" data-val="Love it">Love it</button>
+                <button type="button" class="rate-pill" data-val="Maybe">Maybe</button>
+                <button type="button" class="rate-pill" data-val="Pass">Pass</button>
+              </div>
+              <button type="button" class="sc-toggle">Open full scorecard (stars, must-haves, notes)</button>
+              <div class="sc-body">
+                <div class="stars"><span class="n">Layout &amp; Flow</span><div><button type="button" data-c="0" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="0" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="0" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="0" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="0" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Kitchen</span><div><button type="button" data-c="1" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="1" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="1" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="1" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="1" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Primary Suite</span><div><button type="button" data-c="2" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="2" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="2" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="2" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="2" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Yard</span><div><button type="button" data-c="3" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="3" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="3" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="3" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="3" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Condition</span><div><button type="button" data-c="4" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="4" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="4" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="4" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="4" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Location</span><div><button type="button" data-c="5" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="5" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="5" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="5" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="5" data-s="5" aria-label="5 stars">&#9733;</button></div></div>
+                <div class="chips"><button type="button" class="chip" data-m="0">Fenced Yard</button><button type="button" class="chip" data-m="1">Home Office</button><button type="button" class="chip" data-m="2">Garage</button><button type="button" class="chip" data-m="3">Updated Kitchen</button><button type="button" class="chip" data-m="4">Move-In Ready</button></div>
+                <label class="l">Pros</label><textarea data-k="pros" rows="2"></textarea>
+                <label class="l">Cons</label><textarea data-k="cons" rows="2"></textarea>
+                <label class="l">Notes / Standout memory</label><textarea data-k="notes" rows="2" placeholder="Likes, dislikes, or questions..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div><div class="drive-connector"><span class="drive-pill">13 min drive · 7.1 mi to Stop 3</span></div>
+        <div class="timeline-item" data-stop="3">
+          <div class="timeline-node">3</div>
+          <div class="stop-card">
+            <div class="stop-top"><div>
+              <div class="stop-title">Stop 3 &middot; Property Showing</div>
+              <div class="stop-datetime">Sat, Nov 21, 2026 &bull; 2:10 PM - 2:30 PM</div>
+              <div class="stop-subtitle">Half-acre lot, one-story ranch</div>
+            </div><div class="score-badge">-<small>SCORE</small></div></div>
+            
+            <a class="address-row" href="https://www.google.com/maps/dir/?api=1&amp;destination=789%20Example%20Maple%20Ct%2C%20Zebulon%2C%20NC%2027597" target="_blank" rel="noopener">
+              <svg class="loc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span>789 Example Maple Ct, Zebulon, NC 27597</span>
+            </a>
+            <div class="details-footer"><span>3 bd &middot; 2 ba &middot; 1,360 sq ft</span><span class="detail-price">$235,000</span><a class="listing-link" href="https://www.realtor.com" target="_blank" rel="noopener">View Listing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a></div>
+            
+            <div class="quick-actions">
+              <a class="q-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=789%20Example%20Maple%20Ct%2C%20Zebulon%2C%20NC%2027597" target="_blank" rel="noopener">Google Maps</a>
+              <a class="q-btn" href="https://maps.apple.com/?daddr=789%20Example%20Maple%20Ct%2C%20Zebulon%2C%20NC%2027597" target="_blank" rel="noopener">Apple Maps</a>
+              <a class="q-btn" href="https://www.google.com/maps/search/?api=1&amp;query=789%20Example%20Maple%20Ct%2C%20Zebulon%2C%20NC%2027597" target="_blank" rel="noopener">Street View</a>
+            </div>
+            <div class="feedback-box">
+              <div class="rating-row">
+                <button type="button" class="rate-pill" data-val="Love it">Love it</button>
+                <button type="button" class="rate-pill" data-val="Maybe">Maybe</button>
+                <button type="button" class="rate-pill" data-val="Pass">Pass</button>
+              </div>
+              <button type="button" class="sc-toggle">Open full scorecard (stars, must-haves, notes)</button>
+              <div class="sc-body">
+                <div class="stars"><span class="n">Layout &amp; Flow</span><div><button type="button" data-c="0" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="0" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="0" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="0" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="0" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Kitchen</span><div><button type="button" data-c="1" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="1" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="1" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="1" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="1" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Primary Suite</span><div><button type="button" data-c="2" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="2" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="2" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="2" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="2" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Yard</span><div><button type="button" data-c="3" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="3" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="3" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="3" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="3" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Condition</span><div><button type="button" data-c="4" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="4" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="4" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="4" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="4" data-s="5" aria-label="5 stars">&#9733;</button></div></div><div class="stars"><span class="n">Location</span><div><button type="button" data-c="5" data-s="1" aria-label="1 stars">&#9733;</button><button type="button" data-c="5" data-s="2" aria-label="2 stars">&#9733;</button><button type="button" data-c="5" data-s="3" aria-label="3 stars">&#9733;</button><button type="button" data-c="5" data-s="4" aria-label="4 stars">&#9733;</button><button type="button" data-c="5" data-s="5" aria-label="5 stars">&#9733;</button></div></div>
+                <div class="chips"><button type="button" class="chip" data-m="0">Fenced Yard</button><button type="button" class="chip" data-m="1">Home Office</button><button type="button" class="chip" data-m="2">Garage</button><button type="button" class="chip" data-m="3">Updated Kitchen</button><button type="button" class="chip" data-m="4">Move-In Ready</button></div>
+                <label class="l">Pros</label><textarea data-k="pros" rows="2"></textarea>
+                <label class="l">Cons</label><textarea data-k="cons" rows="2"></textarea>
+                <label class="l">Notes / Standout memory</label><textarea data-k="notes" rows="2" placeholder="Likes, dislikes, or questions..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+  </main>
+  <section class="cmp tab-cmp hide" id="tCmp"></section>
+</div>
+<div class="bottom-bar"><div class="bottom-inner">
+  <button type="button" class="btn-primary" id="subOpen">Submit Scorecard</button>
+  <button type="button" class="btn-secondary" id="copyBtn">Copy Notes</button>
+  <button type="button" class="btn-secondary" id="printBtn">Print / PDF</button>
+</div></div>
+<div class="ov" id="ov"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Submit scorecard"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ===== CrownOS config (set CROWNOS_ENDPOINT to the live URL when confirmed) ===== */
+const CROWNOS_ENDPOINT = "";
+const CROWNOS_AGENT = "bethany";
+const CROWNOS_AGENT_ID = "3574e582-2730-48ef-b226-7d781fc6f270";
+const AGENT_EMAIL = "";
+const TOUR_META = {"slug": "sample-buyer-sat-nov-21-2026", "title": "Home Tour Preview (Example)", "date": "Sat, Nov 21, 2026", "client": "Sample Buyer", "agentName": "Bethany Kuhns", "icsDate": "2026-11-21"};
+const STOPS = [{"address": "123 Example Oak Ln, Raleigh, NC 27610", "time_window": "1:00 PM - 1:20 PM", "subtitle": "2-car garage, fenced backyard", "price": "$245,000", "beds": "3", "baths": "2", "sqft": "1,250", "notes": "Example stop. Check roof age and backyard grading.", "listing_url": "https://www.realtor.com", "drive_to_next": "12 min drive \u00b7 6.2 mi to Stop 2", "listing_href": "https://www.realtor.com", "listing_is_fallback": false}, {"address": "456 Example Pine Dr, Knightdale, NC 27545", "time_window": "1:35 PM - 1:55 PM", "subtitle": "No HOA, updated kitchen", "price": "$240,000", "beds": "3", "baths": "2", "sqft": "1,340", "notes": "Example stop. Notice street parking and afternoon sun.", "listing_url": "https://www.realtor.com", "drive_to_next": "13 min drive \u00b7 7.1 mi to Stop 3", "listing_href": "https://www.realtor.com", "listing_is_fallback": false}, {"address": "789 Example Maple Ct, Zebulon, NC 27597", "time_window": "2:10 PM - 2:30 PM", "subtitle": "Half-acre lot, one-story ranch", "price": "$235,000", "beds": "3", "baths": "2", "sqft": "1,360", "listing_url": "https://www.realtor.com", "listing_href": "https://www.realtor.com", "listing_is_fallback": false}];
+const CATS = ["Layout & Flow","Kitchen","Primary Suite","Yard","Condition","Location"];
+const MUSTS = ["Fenced Yard","Home Office","Garage","Updated Kitchen","Move-In Ready"];
+const STORAGE_KEY = "showing_tour_v2_" + TOUR_META.slug;
+const BUYER_KEY = "showing_buyer_v1";
+var lastPayload = null;
+function $(id){return document.getElementById(id)}
+function esc(t){return String(t==null?"":t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function showToast(m){var t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2200)}
+var state={};try{state=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")||{}}catch(e){state={}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}}
+function st(i){var k=String(i+1);if(!state[k])state[k]={verdict:"",r:[0,0,0,0,0,0],m:[0,0,0,0,0],pros:"",cons:"",notes:""};var s=state[k];if(!s.r)s.r=[0,0,0,0,0,0];if(!s.m)s.m=[0,0,0,0,0];return s}
+function score(s){var t=0,n=0;s.r.forEach(function(v){if(v){t+=v;n++}});return n?Math.round(t/n*20):0}
+function touched(s){return !!(s.verdict||s.r.some(function(v){return v})||s.m.some(function(v){return v})||s.pros||s.cons||s.notes)}
+function vw(s){return s.verdict==="Love it"?2:s.verdict==="Maybe"?1:0}
+function mc(s){return s.m.reduce(function(a,b){return a+b},0)}
+function ranked(){var a=[];STOPS.forEach(function(x,i){var s=st(i);if(touched(s))a.push({i:i,s:s,sc:score(s)})});
+a.sort(function(p,q){var pp=p.s.verdict==="Pass"?1:0,qq=q.s.verdict==="Pass"?1:0;return pp-qq||q.sc-p.sc||vw(q.s)-vw(p.s)||mc(q.s)-mc(p.s)||p.i-q.i});return a}
+function when(x){return [x.date_label||TOUR_META.date,x.time_window].filter(Boolean).join(" ")}
+function refresh(i){var s=st(i),card=document.querySelector('.timeline-item[data-stop="'+(i+1)+'"]');if(!card)return;
+card.classList.toggle("done",touched(s));var b=card.querySelector(".score-badge");if(b){b.innerHTML=(score(s)||"-")+"<small>SCORE</small>"}}
+function paintStop(i){var s=st(i),root=document.querySelector('.timeline-item[data-stop="'+(i+1)+'"]');if(!root)return;
+root.querySelectorAll(".rate-pill").forEach(function(b){b.classList.toggle("active",b.dataset.val===s.verdict)});
+root.querySelectorAll(".stars button").forEach(function(b){b.classList.toggle("on",s.r[+b.dataset.c]>=+b.dataset.s)});
+root.querySelectorAll(".chip").forEach(function(b){var on=!!s.m[+b.dataset.m];b.classList.toggle("on",on);b.textContent=(on?"\u2713 ":"")+MUSTS[+b.dataset.m]});
+["pros","cons","notes"].forEach(function(k){var e=root.querySelector('textarea[data-k="'+k+'"]');if(e&&e.value!==s[k])e.value=s[k]||""});refresh(i)}
+document.addEventListener("click",function(e){var t=e.target.closest("button");if(!t)return;
+var root=t.closest(".timeline-item"),i=root?+root.dataset.stop-1:-1;
+if(t.classList.contains("rate-pill")){var s=st(i);s.verdict=s.verdict===t.dataset.val?"":t.dataset.val;save();paintStop(i);return}
+if(t.dataset.c!==undefined&&root){var s2=st(i),c=+t.dataset.c,v=+t.dataset.s;s2.r[c]=s2.r[c]===v?0:v;save();paintStop(i);return}
+if(t.dataset.m!==undefined&&root){var s3=st(i),m=+t.dataset.m;s3.m[m]=s3.m[m]?0:1;save();paintStop(i);return}
+if(t.classList.contains("sc-toggle")){var b=root.querySelector(".sc-body"),o=b.classList.toggle("open");t.textContent=o?"Hide scorecard":"Open full scorecard (stars, must-haves, notes)";return}
+if(t.id==="tabItin")tab(1);else if(t.id==="tabCmp")tab(2);
+else if(t.id==="subOpen"||t.id==="subOpen2")openSub();else if(t.id==="subClose")closeSub();else if(t.id==="subGo")doSubmit();
+else if(t.id==="subCopy"||t.id==="copyBtn"){var tx=(lastPayload&&t.id==="subCopy")?lastPayload.summary:summary(1900);copyText(tx).then(function(){showToast("Summary copied")},function(){prompt("Copy this text:",tx)})}
+else if(t.id==="printBtn"||t.id==="subPrint"){window.print()}
+else if(t.id==="icsBtn")makeIcs();else if(t.id==="shareBtn")share()});
+document.addEventListener("input",function(e){var el=e.target;if(el.tagName==="TEXTAREA"&&el.dataset.k){var root=el.closest(".timeline-item"),i=+root.dataset.stop-1;st(i)[el.dataset.k]=el.value;save();refresh(i)}});
+function tab(n){$("tabItin").classList.toggle("on",n==1);$("tabCmp").classList.toggle("on",n==2);$("tItin").classList.toggle("hide",n!=1);$("tCmp").classList.toggle("hide",n!=2);if(n==2)renderCmp();window.scrollTo(0,0)}
+function renderCmp(){var r=ranked(),c=$("tCmp");if(!r.length){c.innerHTML='<div class="empty"><b>No homes rated yet.</b><br>Tap Love it, Maybe or Pass, or add stars, on the Itinerary tab. Your ranking shows up here.</div>';return}
+var x="";r.forEach(function(o,k){var h=STOPS[o.i],s=o.s;x+='<div class="rank-card"><div class="badge">'+(k+1)+'</div><div style="flex:1"><h3>'+esc(h.address)+'</h3><small>'+esc([h.price,when(h)].filter(Boolean).join(" | "))+'</small><div class="bar"><i style="width:'+o.sc+'%"></i></div><b style="color:#e91e8c">'+(o.sc||"-")+'/100</b> <small>'+esc(s.verdict||"No verdict")+' | '+mc(s)+' of '+MUSTS.length+' must-haves</small>'+(s.notes?'<p class="note"><b>Notes:</b> '+esc(s.notes)+'</p>':'')+'</div></div>'});
+x+='<div class="cmp-table"><table><tr><th></th>'+r.map(function(o,k){return"<th>#"+(k+1)+"</th>"}).join("")+"</tr>";
+x+="<tr><td>Home</td>"+r.map(function(o){return"<td>"+esc(STOPS[o.i].address.split(",")[0].slice(0,14))+"</td>"}).join("")+"</tr>";
+x+="<tr><td>Verdict</td>"+r.map(function(o){return"<td>"+esc(o.s.verdict||"-")+"</td>"}).join("")+"</tr>";
+CATS.forEach(function(cn,j){x+="<tr><td>"+esc(cn)+"</td>"+r.map(function(o){return"<td>"+(o.s.r[j]||"-")+"</td>"}).join("")+"</tr>"});
+MUSTS.forEach(function(m,j){x+="<tr><td>"+m+"</td>"+r.map(function(o){return"<td>"+(o.s.m[j]?"\u2713":"")+"</td>"}).join("")+"</tr>"});
+x+='</table></div><div class="stack"><button class="btn-primary" id="subOpen2">Submit Scorecard</button><button class="btn-secondary" id="copyBtn">Copy Summary</button></div>';c.innerHTML=x}
+function cut(t,n){t=String(t||"").replace(/\s+/g," ").trim();return t.length>n?t.slice(0,n-3)+"...":t}
+function summary(max){max=max||1900;var r=ranked();if(!r.length)return "No homes rated yet.";
+function build(noteLen,showPC,limit){var t=TOUR_META.title+(TOUR_META.date?" ("+TOUR_META.date+")":"")+"\nRanked picks:\n";
+r.slice(0,limit).forEach(function(o,k){var h=STOPS[o.i],s=o.s;t+="\n"+(k+1)+". "+h.address+"\n   "+[h.price,when(h)].filter(Boolean).join(" | ")+"\n   "+(s.verdict||"No verdict")+(o.sc?", "+o.sc+"/100":"");
+var mm=MUSTS.filter(function(m,j){return s.m[j]});if(mm.length)t+="\n   Must-haves: "+mm.join(", ");
+if(showPC){if(s.pros)t+="\n   Pros: "+cut(s.pros,noteLen);if(s.cons)t+="\n   Cons: "+cut(s.cons,noteLen)}
+if(s.notes&&noteLen>0)t+="\n   Notes: "+cut(s.notes,noteLen)});
+if(limit<r.length)t+="\n(+"+(r.length-limit)+" more homes)";return t}
+var opts=[[400,true,r.length],[150,true,r.length],[80,false,r.length],[0,false,r.length],[0,false,5],[0,false,3]];
+for(var i=0;i<opts.length;i++){var t=build(opts[i][0],opts[i][1],opts[i][2]);if(t.length<=max)return t}
+return build(0,false,3).slice(0,max)}
+function payload(b){var r=ranked(),top=r[0];
+return{agent:CROWNOS_AGENT,agent_id:CROWNOS_AGENT_ID,source:"Buyer Tour Scorecard",submittedAt:new Date().toISOString(),name:b.name,email:b.email,phone:b.phone,sendCopy:!!b.copy,
+tour:{title:TOUR_META.title,date:TOUR_META.date,client:TOUR_META.client},
+topPick:top?{address:STOPS[top.i].address,price:STOPS[top.i].price,score:top.sc,verdict:top.s.verdict}:null,
+summary:summary(1900),
+homes:r.map(function(o,k){var h=STOPS[o.i],s=o.s,ra={};CATS.forEach(function(c,j){ra[c]=s.r[j]});return{rank:k+1,address:h.address,price:h.price,showingDate:h.date_label||TOUR_META.date,showingTime:h.time_window,verdict:s.verdict,score:o.sc,ratings:ra,mustHaves:MUSTS.filter(function(m,j){return s.m[j]}),pros:s.pros,cons:s.cons,notes:s.notes}})}}
+function buyer(){try{return JSON.parse(localStorage.getItem(BUYER_KEY))||{}}catch(e){return{}}}
+function openSub(){var b=buyer();$("modal").innerHTML='<button class="x" id="subClose" aria-label="Close">&times;</button><h2>Submit Scorecard</h2><p class="note">Send your ranked homes and notes to Bethany.</p>'+
+'<label class="l">Name</label><input type="text" id="sn" autocomplete="name" value="'+esc(b.name||TOUR_META.client)+'"><div class="err" id="en"></div>'+
+'<label class="l">Email</label><input type="text" id="se" inputmode="email" autocomplete="email" value="'+esc(b.email)+'"><div class="err" id="ee"></div>'+
+'<label class="l">Phone</label><input type="text" id="sp" inputmode="tel" autocomplete="tel" value="'+esc(b.phone)+'"><div class="err" id="ep"></div>'+
+'<label class="ck"><input type="checkbox" id="sc2"'+(b.copy?" checked":"")+'> Send me a copy</label><div id="subMsg"></div><button class="btn-primary" id="subGo" style="width:100%">Submit Scorecard</button>';$("ov").className="ov on"}
+function closeSub(){$("ov").className="ov"}
+var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function doSubmit(){var n=$("sn").value.trim(),e=$("se").value.trim(),p=$("sp").value.trim(),c=$("sc2").checked;
+var okN=!!n,okE=EMAIL_RE.test(e),okP=p.replace(/\D/g,"").length>=10;
+$("en").textContent=okN?"":"Please enter your name";$("ee").textContent=okE?"":"Please enter a valid email";$("ep").textContent=okP?"":"Please enter a 10 digit phone number";
+if(!(okN&&okE&&okP))return;
+var b={name:n,email:e,phone:p,copy:c};try{localStorage.setItem(BUYER_KEY,JSON.stringify(b))}catch(x){}
+lastPayload=payload(b);
+if(!CROWNOS_ENDPOINT){return showFallback(lastPayload,"ready")}
+var btn=$("subGo");btn.disabled=true;btn.innerHTML='<span class="spin"></span>Sending...';
+fetch(CROWNOS_ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(lastPayload)})
+.then(function(r){if(!r.ok)throw new Error("Status "+r.status);showFallback(lastPayload,"sent")})
+.catch(function(){showFallback(lastPayload,"error")})}
+function mailHref(p){var q=["subject="+encodeURIComponent("Home tour scorecard from "+p.name),"body="+encodeURIComponent(p.summary+"\n\n"+p.name+"\n"+p.phone+"\n"+p.email)];
+if(p.sendCopy)q.push("cc="+encodeURIComponent(p.email));return"mailto:"+AGENT_EMAIL+"?"+q.join("&")}
+function showFallback(p,mode){var head=mode==="sent"?'<h2>Scorecard Sent</h2><div class="okb">&#10003; Thank you, '+esc(p.name)+'! Bethany has your scorecard.</div>':
+mode==="error"?'<h2>Could Not Sync</h2><div class="errb">We could not reach the server. Your scorecard is saved on this phone. Use Copy, Email or Print below to get it to Bethany.</div>':
+'<h2>Scorecard Ready to Sync</h2><div class="okb">&#10003; Offline mode: nothing was sent yet</div><p class="note">Copy it, email it, or save a PDF to share with Bethany.</p>';
+$("modal").innerHTML='<button class="x" id="subClose" aria-label="Close">&times;</button>'+head+'<div class="pre">'+esc(p.summary)+'</div><div class="stack"><button class="btn-primary" id="subCopy">Copy Summary</button><a class="btn-dark" href="'+esc(mailHref(p))+'">Email to Bethany</a><button class="btn-secondary" id="subPrint">Print / Save PDF</button></div>'}
+async function copyText(t){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(t)}
+return new Promise(function(res,rej){var a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy")?res():rej()}catch(e){rej(e)}document.body.removeChild(a)})}
+async function share(){if(navigator.share){try{await navigator.share({title:TOUR_META.title,url:location.href});return}catch(e){}}
+try{await navigator.clipboard.writeText(location.href);showToast("Link copied!")}catch(e){showToast("Save or share this HTML file")}}
+function parseTime12(str){var m=(str||"").trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);if(!m)return null;var h=parseInt(m[1],10),mi=parseInt(m[2],10),ap=m[3].toUpperCase();if(ap==="PM"&&h!==12)h+=12;if(ap==="AM"&&h===12)h=0;return String(h).padStart(2,"0")+String(mi).padStart(2,"0")+"00"}
+function makeIcs(){var base=(TOUR_META.icsDate||"20261121").replace(/-/g,"");var L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Showing Itinerary//EN"];
+STOPS.forEach(function(s,i){var p=(s.time_window||"").split("-"),a=parseTime12(p[0])||"100000",b=parseTime12(p[1])||"102000",ad=(s.address||"").replace(/,/g,"\\,");
+L.push("BEGIN:VEVENT","UID:stop-"+(i+1)+"-"+TOUR_META.slug+"@showing","DTSTART:"+base+"T"+a,"DTEND:"+base+"T"+b,"SUMMARY:Showing "+(i+1)+": "+ad,"LOCATION:"+ad);
+if(s.listing_href)L.push("DESCRIPTION:Listing: "+s.listing_href);L.push("END:VEVENT")});
+L.push("END:VCALENDAR");var blob=new Blob([L.join("\r\n")],{type:"text/calendar;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=TOUR_META.slug+".ics";a.click();showToast("Calendar file downloaded!")}
+$("ov").addEventListener("click",function(e){if(e.target.id==="ov")closeSub()});
+STOPS.forEach(function(s,i){paintStop(i)});
+
+</script>
+</body>
+</html>
